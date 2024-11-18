@@ -1,0 +1,115 @@
+﻿@page "/bindproperty"
+
+
+<h3>Data Binding</h3>
+
+<div class="row" style="border:1px solid gray;margin-bottom:20px;">
+    <div class="col-md-6">
+        <h3 class="text-primary">Product Playground</h3><hr />
+        <span>Active Status:<input type="checkbox" @bind="@product.IsActive" /></span><br />
+        <span>Input : <input id="price" @bind="@product.Price" @bind:event="oninput" /></span><br />
+        <span>Input : <input id="price" @bind-value="@product.Price" @bind-value:event="oninput" /></span><br />
+        <span>
+            Properties:
+            <select @bind="@selectedProp">
+                @foreach (var prop in product.ProductProperties)
+                {
+                    <option value="@prop.Key">@prop.Key</option>
+                }
+            </select>
+        </span>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-primary">Product Summary</h3><hr />
+        <span>Id : @product.Id</span><br />
+        <span>Name : @product.Name</span><br />
+        <span>Is Active : @(product.IsActive == true ? "It's active" : "It's not active")</span><br />
+        <span>Price : @product.Price</span><br />
+        <span>
+            Selected Properties:
+            @if (!string.IsNullOrEmpty(selectedProp))
+            {
+                <span>@product.ProductProperties.Where(x => x.Key == selectedProp).Select(x => x.Value).FirstOrDefault()</span>
+            }
+        </span>
+    </div>
+</div>
+
+<div>
+    <h3 class="text-success">Product Table</h3>
+    <div class="row m-1">
+        <div class="col-md-4">Name</div>
+        <div class="col-md-4">Price</div>
+        <div class="col-md-4">Is Active</div>
+    </div>
+    <hr />
+    @foreach (var prod in ProductList) { 
+        <div class="row m-1">
+            <div class="col-md-4">
+                <input type="text" @bind="prod.Name" @bind:event="oninput" id="@prod.Id" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" @bind="prod.Price" @bind:event="oninput" id="@prod.Id" />
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" @bind="prod.IsActive" @bind:event="oninput" id="@prod.Id" />
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+<div class="m-2">
+    <h3 class="text-success">Product Summary</h3>
+    @foreach (var prod in ProductList) { 
+        <span>@prod.Name [@prod.Price] @(prod.IsActive==true?"Active":"Not Active")</span><br />
+    }
+</div>
+
+@code {
+    private string selectedProp = string.Empty;
+    Product product = new Product()
+        {
+            Id = 1,
+            Name = "Mobile",
+            IsActive = true,
+            Price = 0,
+            ProductProperties = new List<Product_Property>() {
+            new Product_Property(){Id=1,Key="Color",Value="Red"},
+            new Product_Property(){Id=2,Key="Size",Value="20px"},
+            new Product_Property(){Id=3,Key="Flavor",Value="Rose" }
+        }
+        };
+
+    public List<Product> ProductList = new List<Product>();
+
+    protected override void OnInitialized()
+    {
+        ProductList.Add(new Product
+            {
+                Id = 1,
+                Name = "Midnight Blaze",
+                IsActive = true,
+                Price = 499,
+                ProductProperties = new List<Product_Property>() {
+            new Product_Property(){Id=1,Key="Color",Value="Red"},
+            new Product_Property(){Id=2,Key="Size",Value="20px"},
+            new Product_Property(){Id=3,Key="Flavor",Value="Rose" }
+            }
+            });
+
+        ProductList.Add(new Product
+            {
+                Id = 2,
+                Name = "Blossom Lily",
+                IsActive = true,
+                Price = 1199,
+                ProductProperties = new List<Product_Property>() {
+            new Product_Property(){Id=1,Key="Color",Value="Red"},
+            new Product_Property(){Id=2,Key="Size",Value="20px"},
+            new Product_Property(){Id=3,Key="Flavor",Value="Lily" }
+            }
+            });
+
+    }
+}
