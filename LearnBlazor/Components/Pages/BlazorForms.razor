@@ -1,0 +1,78 @@
+﻿
+@page "/blazorform"
+
+<div class="col-md-12">
+    <h2>Product Form</h2>
+    <EditForm FormName="ProductCreation" Model="Prod" OnValidSubmit="handleProductCreation">
+        @* <ValidationSummary /> *@
+        <DataAnnotationsValidator />
+        <div class="form-group my-2">
+            <label>Product Name</label>
+            <InputText class="form-control" @bind-Value="Prod.Name"></InputText>
+            <ValidationMessage For="@(()=>Prod.Name)"></ValidationMessage>
+        </div>
+        <div class="form-group my-2">
+            <label>Price</label>
+            <InputNumber class="form-control" @bind-Value="Prod.Price"></InputNumber>
+            <ValidationMessage For="@(()=>Prod.Price)"></ValidationMessage>
+        </div>
+        <div class="form-group my-2">
+            <label>Is Active</label>
+            <InputCheckbox @bind-Value="Prod.IsActive"></InputCheckbox>
+            <ValidationMessage For="@(()=>Prod.IsActive)"></ValidationMessage>
+        </div>
+        <div class="form-group my-2">
+            <label>Available After</label>
+            <InputDate class="form-control" @bind-Value="Prod.AvailableAfter"></InputDate>
+            <ValidationMessage For="@(()=>Prod.AvailableAfter)"></ValidationMessage>
+        </div>
+        <div class="form-group my-2">
+            <label>Category</label>
+            <InputSelect class="form-select" @bind-Value="Prod.Category">
+                @foreach (var category in Enum.GetValues(typeof(Category)))
+                {
+                    <option value="@category">@category</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(()=>Prod.Category)"></ValidationMessage>
+        </div>
+        <button type="submit" style="width:200px" class="btn btn-primary my-2">Create Product</button>
+        <p class="text-success">@(IsProcessing == true ?"Processing...":"" )</p>
+    </EditForm>
+</div>
+<div>
+    <table class="table border">
+        <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Is Active</th>
+            <th>Date</th>
+            <th>Category</th>
+        </tr>
+        <tr>
+            @if (createdProduct is not null) {
+                <td>@createdProduct.Name</td>
+                <td>@createdProduct.Price</td>
+                <td>@createdProduct.IsActive</td>
+                <td>@createdProduct.AvailableAfter</td>
+                <td>@createdProduct.Category</td>
+            }
+        </tr>
+    </table>
+</div>
+
+@code {
+    [SupplyParameterFromForm(Name = "ProductCreation")]
+    public Product Prod { get; set; } = new Product();
+    public bool IsProcessing { get; set; } = false;
+    public Product? createdProduct { get; set; } = new Product();
+
+    public async Task handleProductCreation() {
+        IsProcessing = true;
+        createdProduct = null;
+        await Task.Delay(1000);
+        createdProduct = Prod;
+        Prod = new Product();
+        IsProcessing = false;
+    }
+}
