@@ -1,0 +1,12 @@
+﻿<p class="m-2">@Message : @LuckyNumber</p>
+
+@code {
+    [Parameter]
+    public string MessageForGrandChild { get; set; }
+
+    [CascadingParameter(Name ="message")]
+    public string Message { get; set; }
+
+    [CascadingParameter(Name = "luckyNumber")]
+    public string LuckyNumber { get; set; }
+}

@@ -1,0 +1,39 @@
+﻿
+
+
+<div style="width:50%;" class="border p-2" @onclick="()=>Show(Product.Name)">
+    <div><input type="checkbox" @onchange="FavoriteCountUpdated" /> Add to favorite</div>
+    <div class="p-1">Name - @Product.Name</div>
+    <div class="p-1">Show Properties : <input type="checkbox" @bind="@Product.IsActive" /> </div>
+    @if (Product.IsActive)
+    {
+        <div class="border m-1">
+            @foreach (var detail in Product.ProductProperties)
+            {
+                <div class="p-1">@detail.Key - @detail.Value</div>
+            }
+        </div>
+    }
+    <_DeleteButtonComponent ProductId=@Product.Id></_DeleteButtonComponent>
+</div>
+
+
+@code {
+    [Parameter]
+    public Product Product { get; set; } = new Product();
+    [Parameter]
+    public EventCallback<bool> OnFavoriteUpdated { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnProdClick { get; set; }
+
+    protected async Task FavoriteCountUpdated(ChangeEventArgs e)
+    {
+        await OnFavoriteUpdated.InvokeAsync(Convert.ToBoolean(e.Value));
+    }
+
+
+    protected async Task Show(string prodName) {
+        await OnProdClick.InvokeAsync(prodName);
+    }
+}

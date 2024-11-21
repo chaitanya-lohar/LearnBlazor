@@ -1,0 +1,35 @@
+﻿
+@page "/routing"
+@page "/routing/{name}"
+@page "/routing/param/{id:int}"
+@page "/learnblazor/routing"
+@page "/routing/catch-all/{*PageParameter}"
+
+@inject NavigationManager navigationManager
+
+<h1>Learn Routing</h1>
+<h5>Params : @(name==null?id:name)</h5>
+<h5>Page Parameter : @PageParameter</h5>
+<a href="routing?name=Learning" class="btn btn-primary">Navigate to query parameter</a>
+<button class="btn btn-success" @onclick="loadQueryParameter">Load query</button>
+<div style="height:1000px" class="alert-info"></div>
+<p id="targetParagraph">This is last line of this page</p>
+
+@code {
+    [Parameter]
+    public string name { get; set; } = string.Empty;
+
+    [Parameter]
+    public int id { get; set; } = 0;
+
+    [Parameter]
+    public string PageParameter { get; set; } = string.Empty;
+
+
+    public void loadQueryParameter() {
+        var url = new Uri(navigationManager.Uri); // it will fetch current url
+        var query = System.Web.HttpUtility.ParseQueryString(url.Query); // separating parameter
+        name = query["name"]??"";
+        //navigationManager.Refresh(forceReload: true);
+    }
+}

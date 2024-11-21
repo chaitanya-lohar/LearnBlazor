@@ -1,0 +1,41 @@
+﻿
+@inject IJSRuntime _JsRuntime
+
+<div>
+    <div class="alert alert-info">
+        @Title
+    </div>
+    @if (ChildSomeContent != null)
+    {
+        <div class="alert alert-success">
+            @ChildSomeContent
+        </div>
+    }
+</div>
+<button class="btn btn-danger m-" @onclick="OnButtonClick">Click</button>
+
+<_GrandChildComponent></_GrandChildComponent>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment ChildSomeContent { get; set; } // content from between the component
+
+    [Parameter]
+    public EventCallback OnButtonClick { get; set; }
+
+    // [Parameter]
+    // public string MessageForGrandChild { get;set;}
+
+    public async Task ToastrSuccess()
+    {
+        await _JsRuntime.ToastrSuccess("success notification");
+    }
+
+    public async Task SweetAlertSuccess()
+    {
+        await _JsRuntime.InvokeVoidAsync("showSweetAlert", "success", "Login Successfully!");
+    }
+}

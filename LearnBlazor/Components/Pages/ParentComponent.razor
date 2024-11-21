@@ -1,0 +1,35 @@
+﻿@page "/parent"
+
+<CascadingValue Value="@MessageForGrandChild" Name="message">
+    <CascadingValue Value="@LuckyNumber" Name="luckyNumber">
+        <_ChildComponent @ref="childObj" OnButtonClick="showMessage" Title="This is parameter from parent component in child component">
+            <ChildSomeContent>some text between the component from parent component</ChildSomeContent>
+        </_ChildComponent>
+        <p>@messageText</p>
+    </CascadingValue>
+</CascadingValue>
+@* <_ChildComponent Title="This is parameter from parent component in child component">
+</_ChildComponent>
+<p>@messageText</p>
+
+ *@
+
+<div class="row">
+    <button class="btn btn-success col-md-3 m-1" @onclick="()=>childObj.ToastrSuccess()">Toastr Success</button>
+    <button class="btn btn-danger col-md-3 m-1" @onclick="()=>childObj.SweetAlertSuccess()">Sweet Alert Success</button>
+</div>
+
+
+@code {
+    private _ChildComponent childObj = new ();
+
+    public string messageText { get; set; } = string.Empty;
+    public string MessageForGrandChild { get; set; } = "This is for grand child";
+    public string LuckyNumber { get; set; } = "13";
+
+    public void showMessage()
+    {
+        messageText = "button in child component was clicked";
+    }
+}
+

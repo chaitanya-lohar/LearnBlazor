@@ -1,0 +1,28 @@
+﻿<h3 class="text-success">Child Life Cycle</h3>
+
+@foreach(var item in EventTypes){
+    <p>@item</p>
+    <hr />
+}
+
+
+@code {
+    [Parameter]
+    public int CountValue { get;set;}
+    List<string> EventTypes { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        EventTypes.Add($"OnInitialized-Child is called {DateTime.Now.Nanosecond} ns");
+    }
+
+    protected override void OnParametersSet()
+    {
+        EventTypes.Add($"OnParametersSet-Child is called {DateTime.Now.Nanosecond} ns");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        EventTypes.Add($"OnParametersSetAsync-Child is called {DateTime.Now.Nanosecond} ns");
+    }
+}

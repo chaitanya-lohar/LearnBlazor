@@ -1,0 +1,59 @@
+﻿
+@page "/blazorjs"
+@inject IJSRuntime _JsRuntime
+<div>
+    <button class="btn btn-primary m-1" @onclick="testConfirmationBox">Test Confirmation</button>
+</div>
+<div class="row m-1">
+    <p><strong>Toastr Alert</strong></p>
+    <button class="btn btn-primary m-1 col-md-3" @onclick="ToastrSuccess">Success</button>
+    <button class="btn btn-warning m-1 col-md-3" @onclick="ToastrWarning">Warning</button>
+    <button class="btn btn-info m-1 col-md-3" @onclick="ToastrInfo">Info</button>
+</div>
+<div class="row m-1">
+    <p><strong>Sweet Alert</strong></p>
+    <button class="btn btn-primary m-1 col-md-3" @onclick="SweetAlertSuccess">Sweet Alert Success</button>
+    <button class="btn btn-warning m-1 col-md-3" @onclick="SweetAlertError">Sweet Alert Error</button>
+</div>
+<div>
+    @if (Confirmation)
+    {
+        <p>Confirmation has been made!</p>
+    }
+
+    else { 
+        <p>Confirmation is still pending!</p>
+    }
+</div>
+
+
+@code {
+    public string message { get; set; } = "Do you want to delete this record!";
+    public bool Confirmation { get; set; } = false;
+
+    public async Task testConfirmationBox() {
+        Confirmation = await _JsRuntime.InvokeAsync<bool>("confirm", message);
+    }
+
+    public async Task ToastrSuccess() {
+        await _JsRuntime.ToastrSuccess("success notification");
+    }
+
+    public async Task ToastrWarning()
+    {
+        await _JsRuntime.ToastrWarning("warning notification");
+    }
+
+    public async Task ToastrInfo() {
+        await _JsRuntime.ToastrInfo("Info notification");
+    }
+
+    public async Task SweetAlertError()
+    {
+        await _JsRuntime.InvokeVoidAsync("showSweetAlert","error","Something went wrong!");
+    }
+    public async Task SweetAlertSuccess()
+    {
+        await _JsRuntime.InvokeVoidAsync("showSweetAlert","success","Login Successfully!");
+    }
+}
